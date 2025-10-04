@@ -1,0 +1,32 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    overflow: hidden; /* гарантированно убираем скролл */
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ECEFF1;
+    min-height: 100vh; /* всегда по высоте экрана */
+}
+
+.MedCard {
+    width: 80vw;
+    height: 45vw;
+    background-color: white;
+    border-radius: 2vw;
+    box-shadow: 0 0 2vw rgba(0, 0, 0, 0.1);
+}
+
+.head{
+    background-color: #2D9CDB;
+    height: 10vw;
+    border-radius:2vw 2vw 0 0;
+}
