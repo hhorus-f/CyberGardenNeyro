@@ -19,11 +19,28 @@ body {
 
 .MedCard {
     width: 80vw;
+    max-width: 1200px;
     height: 45vw;
+    max-height: 600px;
     background-color: white;
     border-radius: 2vw;
     box-shadow: 0 0 2vw rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
 }
+
+.content {
+    display: flex;
+    flex: 1;
+}
+
+.left, .right {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 
 .head{
     background-color: #2D9CDB;
