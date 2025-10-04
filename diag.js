@@ -8,20 +8,12 @@ let startX = 0;
 
 // Настройка canvas под адаптивные размеры
 function resizeCanvas() {
-    // canvas.width = window.innerWidth * 0.5;  // 50vw
-    // canvas.height = window.innerHeight * 0.2; // 20vh
+    // canvas.width = window.innerWidth * 0.5;
+    // canvas.height = window.innerHeight * 0.2;
     draw();
 }
 window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
-
-// Генерация случайных данных каждую секунду
-setInterval(() => {
-    const now = Date.now();
-    const val = 20 + Math.random() * 10;
-    data.push({ x: now, y: val });
-    draw();
-}, 1000);
 
 // Панорамирование мышью
 canvas.addEventListener('mousedown', e => {
@@ -38,13 +30,27 @@ canvas.addEventListener('mousemove', e => {
 canvas.addEventListener('mouseup', () => isDragging = false);
 canvas.addEventListener('mouseleave', () => isDragging = false);
 
+// Генерация случайных данных каждую секунду
+setInterval(() => {
+    const now = Date.now();
+    const val = 20 + Math.random() * 10;
+    data.push({ x: now, y: val });
+
+    // Автопрокрутка, если пользователь не дергает мышью
+    if (!isDragging) {
+    const chartWidth = canvas.width * 0.88 - canvas.width * 0.02; // ширина графика
+    const stepX = window.innerWidth * 0.07; // шаг в vw
+    offsetX = Math.min(0, chartWidth - (data.length - 1) * stepX);
+}
+    draw();
+}, 1000);
+
 function draw() {
     const width = canvas.width;
     const height = canvas.height;
 
     ctx.clearRect(0, 0, width, height);
 
-    // Отступы и размеры графика относительно canvas
     const marginLeft = width * 0.12;
     const marginBottom = height * 0.2;
     const chartWidth = width - marginLeft - width * 0.02;
@@ -53,33 +59,31 @@ function draw() {
     const yMin = 0;
     const yMax = 50;
 
-    // --- Горизонтальная сетка и подписи Y ---
+    // --- Горизонтальная сетка ---
     ctx.strokeStyle = 'rgba(0,0,0,0.1)';
     ctx.lineWidth = 1;
-
     const yStep = 10;
-    const fontSize = 14; // фиксированный размер текста
+    const fontSize = 14;
     ctx.fillStyle = '#000';
     ctx.font = `${fontSize}px Arial`;
     ctx.textAlign = 'right';
     ctx.textBaseline = 'middle';
-
     for (let y = yMin; y <= yMax; y += yStep) {
         const py = chartHeight - ((y - yMin) / (yMax - yMin)) * chartHeight + height * 0.05;
         ctx.beginPath();
         ctx.moveTo(marginLeft, py);
         ctx.lineTo(width - width * 0.02, py);
         ctx.stroke();
-        ctx.fillText(y, marginLeft - 5, py); // текст фиксированного размера
+        ctx.fillText(y, marginLeft - 5, py);
     }
 
-    // --- Вертикальная сетка и подписи времени X ---
+    // --- Вертикальная сетка и подписи времени ---
     ctx.textAlign = 'center';
     ctx.textBaseline = 'top';
-    const stepX = chartWidth / Math.max(1, data.length - 1); // шаг зависит от количества точек и размера canvas
+    const stepX = window.innerWidth * 0.07; // фиксированное расстояние между точками
     for (let i = 0; i < data.length; i++) {
         const x = marginLeft + i * stepX + offsetX;
-        if (x < marginLeft) continue;
+        if (x < marginLeft - stepX) continue; // не рисуем слишком левую область
         if (x > width - width * 0.02) break;
 
         ctx.beginPath();
@@ -89,7 +93,7 @@ function draw() {
 
         const time = new Date(data[i].x);
         const timeStr = `${time.getHours()}:${time.getMinutes().toString().padStart(2,'0')}:${time.getSeconds().toString().padStart(2,'0')}`;
-        ctx.fillText(timeStr, x, chartHeight + 2); // текст фиксированный
+        ctx.fillText(timeStr, x, chartHeight + 2);
     }
 
     // --- Оси ---

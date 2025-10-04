@@ -19,9 +19,7 @@ body {
 
 .MedCard {
     width: 80vw;
-    max-width: 1200px;
     height: 45vw;
-    max-height: 600px;
     background-color: white;
     border-radius: 2vw;
     box-shadow: 0 0 2vw rgba(0, 0, 0, 0.1);
